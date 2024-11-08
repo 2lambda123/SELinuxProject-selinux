@@ -22,6 +22,7 @@ from setools.terulequery import TERuleQuery
 from setools.typeattrquery import TypeAttributeQuery
 from setools.typequery import TypeQuery
 from setools.userquery import UserQuery
+import defusedxml.ElementTree
 
 PROGNAME = "selinux-python"
 try:
@@ -1195,10 +1196,9 @@ def gen_bool_dict(path="/usr/share/selinux/devel/policy.xml"):
     global booleans_dict
     if booleans_dict:
         return booleans_dict
-    import xml.etree.ElementTree
     booleans_dict = {}
     try:
-        tree = xml.etree.ElementTree.fromstring(policy_xml(path))
+        tree = defusedxml.ElementTree.fromstring(policy_xml(path))
         for l in tree.findall("layer"):
             for m in l.findall("module"):
                 for b in m.findall("tunable"):

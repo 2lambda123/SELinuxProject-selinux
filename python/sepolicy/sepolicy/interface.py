@@ -22,6 +22,8 @@
 import re
 import sys
 import sepolicy
+import defusedxml.ElementTree
+
 ADMIN_TRANSITION_INTERFACE = "_admin$"
 USER_TRANSITION_INTERFACE = "_role$"
 
@@ -123,7 +125,6 @@ interface_dict = None
 def get_interface_dict(path="/usr/share/selinux/devel/policy.xml"):
     global interface_dict
     import os
-    import xml.etree.ElementTree
     if interface_dict:
         return interface_dict
 
@@ -142,9 +143,9 @@ def get_interface_dict(path="/usr/share/selinux/devel/policy.xml"):
 
     try:
         if os.path.isfile(path):
-            tree = xml.etree.ElementTree.parse(path)
+            tree = defusedxml.ElementTree.parse(path)
         else:
-            tree = xml.etree.ElementTree.fromstring(xml_path)
+            tree = defusedxml.ElementTree.fromstring(xml_path)
         for l in tree.findall("layer"):
             for m in l.findall("module"):
                 for i in m.iter('interface'):
