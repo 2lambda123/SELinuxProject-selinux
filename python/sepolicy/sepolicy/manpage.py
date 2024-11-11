@@ -21,6 +21,8 @@
 #                                        02111-1307  USA
 #
 #
+import defusedxml.ElementTree
+
 __all__ = ['ManPage', 'HTMLManPages', 'gen_domains']
 
 import string
@@ -48,11 +50,9 @@ def gen_modules_dict(path="/usr/share/selinux/devel/policy.xml"):
     global modules_dict
     if modules_dict:
         return modules_dict
-
-    import xml.etree.ElementTree
     modules_dict = {}
     try:
-        tree = xml.etree.ElementTree.fromstring(sepolicy.policy_xml(path))
+        tree = defusedxml.ElementTree.fromstring(sepolicy.policy_xml(path))
         for l in tree.findall("layer"):
             for m in l.findall("module"):
                 name = m.get("name")
